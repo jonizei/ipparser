@@ -9,6 +9,6 @@
 
 # Optional parameters
   
-  -min <number> = minimun accepted network
+  -min (number) = minimun accepted network
   -net = find network address to every ip address 
   
