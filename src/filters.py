@@ -1,6 +1,7 @@
 from ipfilter import IPFilter
 from netaddr import *
 
+# Find network address for given ip address
 def ip_and(ip):
     ip_bits = ip.ip.bits()
     mask_bits = ip.netmask.bits()
@@ -23,6 +24,7 @@ def ip_and(ip):
     ip_str = '.'
     return IPNetwork(ip_str.join(ip_array) + '/' + mask)
 
+# Return filter that is assigned to the given parameter
 def get_filter(params, key):
     if key == '-min':
         return IPSupernetFilter(int(params[key]))
@@ -41,7 +43,7 @@ class IPSupernetFilter(IPFilter):
         for ip in ip_list:
             tok = ip.__str__().split('/')
             if int(tok[1]) > self.mask_size:
-                supernets = ip.supernet(26)
+                supernets = ip.supernet(self.mask_size)
                 new_list.append(supernets[0])
             else:
                 new_list.append(ip)
