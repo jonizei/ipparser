@@ -1,4 +1,4 @@
 *.txt
 build/
 dist/
-.spec
+*.spec
