@@ -5,7 +5,7 @@
 # How to run
 
   1. Download newest release
-  2. Type "ipparser -I (input text file) -O (output text file) <optional parameters>" to a command prompt
+  2. Type "ipparser -I \<input text file\> -O \<output text file\> \<optional parameters\>" to a command prompt
 
 # Optional parameters
   
