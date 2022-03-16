@@ -11,6 +11,9 @@ parameters = {
     },
     '-min' : {
         'pair' : True
+    },
+    '-net' : {
+        'pair' : False
     }
 }
 
