@@ -8,10 +8,13 @@ parameters = {
     },
     '-all' : {
         'pair' : False
+    },
+    '-min' : {
+        'pair' : True
     }
 }
 
-# Finds all parameters from list of arguments
+# Finds all parameters from input
 def find_parameters(argv):
     params = []
     for i in range(0, len(argv)):
@@ -20,8 +23,9 @@ def find_parameters(argv):
 
     return params
 
+# Creates dictionary of parameters
 def parse(argv):
-    parsed_params = []
+    parsed_params = {}
     found_params = find_parameters(argv)
 
     for p in found_params:
@@ -30,9 +34,9 @@ def parse(argv):
                 if p[0] + 1 < len(argv):
                     value = argv[p[0] + 1]
                     if value[0] != '-':
-                        parsed_params.append({'key' : p[1], 'value' : value})
+                        parsed_params[p[1]] = value
             else:
-                parsed_params.append({'key' : p[1], 'value' : ''})
+                parsed_params[p[1]] = ''
 
     return parsed_params
 
