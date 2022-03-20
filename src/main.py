@@ -16,6 +16,15 @@ def get_ip_range(start, end):
 
     return ip_list
 
+# Parse begin and end ip from an input
+# Return range of ip addresses
+def range_input(part1, part2):
+    if not '.' in part2 and len(part2) < 4:
+        part2 = '.'.join(part1.split('.')[0:3]) + '.' + part2
+    
+    return get_ip_range(part1, part2)
+
+
 # Read text file
 # Save lines as IPNetwork objects
 # Parse ip ranges if have any
@@ -25,15 +34,14 @@ def read_file(filename):
     with open(filename, "r") as file:
         lines = file.read().split("\n")
         for line in lines:
-            line = line.replace(' ', '')
-            tokens = line.split(DIVIDER)
-            if len(tokens) < 2:
-                ip_list.append(IPNetwork(tokens[0]))
-            else:
-                if not '.' in tokens[1]:
-                    tokens[1] = '.'.join(tokens[0].split('.')[0:3]) + '.' + tokens[1]
-                tmp = get_ip_range(tokens[0], tokens[1])
-                ip_list.extend(tmp)
+            if line != '':
+                line = line.replace(' ', '')
+                tokens = line.split(DIVIDER)
+                if len(tokens) < 2:
+                    ip_list.append(IPNetwork(tokens[0]))
+                else:
+                    tmp = range_input(tokens[0], tokens[1])
+                    ip_list.extend(tmp)
 
     return ip_list
 
