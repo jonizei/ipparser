@@ -15,8 +15,8 @@
 ## Possible inputs
 
   input file can contain these lines:<br/>
-    - <\ip address\><br/>
-    - <\ip address\>/<\subnet mask\><br/>
-    - <\ip address\> - <\ip address\><br/>
-    - <\ip address\>/<\subnet mask\> - <\ip address\>/<\subnet mask\><br/>
-    - <\ip address\> - <\host net\><br/>
+    - \<ip address\><br/>
+    - \<ip address\>/\<subnet mask\><br/>
+    - \<ip address\> - \<ip address\><br/>
+    - \<ip address\>/\<subnet mask\> - \<ip address\>/\<subnet mask\><br/>
+    - \<ip address\> - \<host net\><br/>
