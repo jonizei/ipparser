@@ -1,6 +1,6 @@
 # ipparser
 
-  Merges list of ip addresses to network groups.
+  Merges list of ip addresses into networks.
 
 # How to run
 
