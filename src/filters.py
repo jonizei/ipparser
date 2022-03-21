@@ -21,6 +21,11 @@ def ip_and(ip):
             ip_array.append(str(int(tmp, 2)))
             tmp = ''
 
+        if i == len(ip_bits)-1:
+            i_bit = int(tmp, 2)
+            ip_array.append(str(i_bit))
+            tmp = ''
+
     ip_str = '.'
     return IPNetwork(ip_str.join(ip_array) + '/' + mask)
 
@@ -33,6 +38,7 @@ def get_filter(params, key):
     else:
         return None
 
+# Filter for setting minimum netmask
 class IPSupernetFilter(IPFilter):
 
     def __init__(self, mask_size):
@@ -50,6 +56,7 @@ class IPSupernetFilter(IPFilter):
 
         return new_list
 
+# Filter for setting every address to its network address
 class IPNetworkFilter(IPFilter):
 
     def filter(self, ip_list) -> list:
