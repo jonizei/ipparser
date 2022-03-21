@@ -14,7 +14,7 @@
   
 ## Possible inputs
 
-  - input file can contain these lines:
+  input file can contain these lines:
     - <\ip address\>
     - <\ip address\>/<\subnet mask\>
     - <\ip address\> - <\ip address\>
