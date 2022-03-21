@@ -69,6 +69,11 @@ def filter_list(ip_list, filters):
 
     return new_list
 
+# Read parameters
+# Read input file
+# Create required filters
+# Filter the entire list
+# Write results to an output file
 def main(argv):
     params = ap.parse(argv)
     ip_list = read_file(params['-I'])

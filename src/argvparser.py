@@ -17,11 +17,6 @@ parameters = {
     }
 }
 
-#def validate_parameters(params):
-#    for key in params:
-#        if not key in parameters:
-
-
 # Finds all parameters from input
 def find_parameters(argv):
     params = []
