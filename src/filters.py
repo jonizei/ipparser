@@ -38,6 +38,24 @@ def get_filter(params, key):
     else:
         return None
 
+# Get all ip addresses from a range
+def get_ip_range(start, end):
+    ip_range = list(iter_iprange(start, end))
+    ip_list = []
+
+    for ip in ip_range:
+        ip_list.append(IPNetwork(ip.__str__()))
+
+    return ip_list
+
+# Parse begin and end ip from an input
+# Return range of ip addresses
+def range_input(part1, part2):
+    if not '.' in part2 and len(part2) < 4:
+        part2 = '.'.join(part1.split('.')[0:3]) + '.' + part2
+    
+    return get_ip_range(part1, part2)
+
 # Filter for setting minimum netmask
 class IPSupernetFilter(IPFilter):
 
