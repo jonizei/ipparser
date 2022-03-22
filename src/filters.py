@@ -1,6 +1,19 @@
 from ipfilter import IPFilter
 from netaddr import *
 
+DIVIDER = '-'
+
+def _make_gen(reader):
+    b = reader(1024 * 1024)
+    while b:
+        yield b
+        b = reader(1024*1024)
+
+def rawgencount(filename):
+    f = open(filename, 'rb')
+    f_gen = _make_gen(f.raw.read)
+    return sum( buf.count(b'\n') for buf in f_gen )
+
 # Find network address for given ip address
 def ip_and(ip):
     ip_bits = ip.ip.bits()
@@ -74,6 +87,15 @@ class IPSupernetFilter(IPFilter):
 
         return new_list
 
+    def filter_single(self, addr) -> str:
+        new_network = addr
+        tok = addr.split('/')
+        if int(tok[1]) > self.mask_size:
+            supernets = IPNetwork(addr).supernet(self.mask_size)
+            new_network = supernets[0].__str__()
+            
+        return new_network
+
 # Filter for setting every address to its network address
 class IPNetworkFilter(IPFilter):
 
@@ -83,3 +105,42 @@ class IPNetworkFilter(IPFilter):
             new_list.append(ip_and(ip))
         
         return new_list
+
+    def filter_single(self, addr) -> str:
+        if addr != '' and addr != None:
+            return ip_and(IPNetwork(addr)).__str__()
+        return addr
+
+class IPInputFilter(IPFilter):
+
+    def filter(self, ip_list) -> list:
+        new_list = []
+        for line in ip_list:
+            line = line.replace(' ', '')
+            if line != '':
+                tokens = line.split(DIVIDER)
+                if len(tokens) < 2:
+                    new_list.append(IPNetwork(tokens[0]))
+                else:
+                    tmp = range_input(tokens[0], tokens[1])
+                    new_list.extend(tmp)
+        return new_list
+
+    def filter_single(self, addr) -> str:
+        if addr != '':
+            addr = addr.replace(' ', '')
+            tokens = addr.split(DIVIDER)
+            if len(tokens) < 2:
+                addr = tokens[0]
+            else:
+                tmp = range_input(tokens[0], tokens[1])
+                addr = "\n".join([x.__str__() for x in tmp])
+        return addr
+
+class IPMerge(IPFilter):
+
+    def filter(self, ip_list) -> list:
+        return cidr_merge(ip_list)
+
+    def filter_single(self, addr) -> str:
+        return super().filter_single(addr)
