@@ -3,6 +3,7 @@ import argvparser as ap
 from netaddr import *
 import pprint
 from filters import *
+import time
 
 DIVIDER = '-'
 
@@ -10,7 +11,7 @@ DIVIDER = '-'
 # list of strings
 def create_ip_list(lines):
     ip_list = []
-    
+
     for line in lines:
         if line != '':
             line = line.replace(' ', '')
@@ -74,4 +75,6 @@ def main(argv):
     write_file(params['-O'], ip_list)
 
 if __name__ == "__main__":
+    start_time = time.time()
     main(sys.argv)
+    print(f"--- %s seconds ---" % (time.time() - start_time))

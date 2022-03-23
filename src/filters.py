@@ -6,9 +6,7 @@ def ip_and(ip):
     ip_bits = ip.ip.bits()
     mask_bits = ip.netmask.bits()
     mask = ip.__str__().split('/')[1]
-
     tmp = ''
-
     ip_array = []
 
     for i in range(0, len(ip_bits)):
@@ -26,8 +24,7 @@ def ip_and(ip):
             ip_array.append(str(i_bit))
             tmp = ''
 
-    ip_str = '.'
-    return IPNetwork(ip_str.join(ip_array) + '/' + mask)
+    return IPNetwork('.'.join(ip_array) + '/' + mask)
 
 # Return filter that is assigned to the given parameter
 def get_filter(params, key):
@@ -63,6 +60,7 @@ class IPSupernetFilter(IPFilter):
         self.mask_size = mask_size
 
     def filter(self, ip_list) -> list:
+
         new_list = []
         for ip in ip_list:
             tok = ip.__str__().split('/')
