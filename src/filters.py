@@ -1,4 +1,3 @@
-from numpy import isin
 from ipfilter import IPFilter
 from netaddr import *
 

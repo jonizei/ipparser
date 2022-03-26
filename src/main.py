@@ -1,4 +1,3 @@
-import chunk
 import sys
 import argvparser as ap
 from netaddr import *
