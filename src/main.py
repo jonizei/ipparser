@@ -1,7 +1,7 @@
+import chunk
 import sys
 import argvparser as ap
 from netaddr import *
-import pprint
 from filters import *
 import time
 
@@ -34,8 +34,16 @@ def input_file_generator(filename):
 # Write IPNetworks to a text file
 def write_file(filename, data):
     with open(filename, "w") as file:
-        for address in data:
-            file.write(address.__str__() + "\n")
+        file.write("\n".join(address.__str__() for address in data))
+
+def append_temp_file(filename, data):
+    with open(filename, "a") as file:
+        file.write("\n".join(address.__str__() for address in data))
+
+def read_temp_file(filename):
+    with open(filename, 'r') as file:
+        for line in file:
+            yield line
 
 # Creates all filters that will be used
 def create_filters(params):
@@ -72,9 +80,9 @@ def main(argv):
     params = ap.parse(argv)
     input_gen = input_file_generator(params['-I'])
     filters = create_filters(params)
-    ip_list_gen = filter_list_generator(input_gen, filters)
-    ip_set = uniques(ip_list_gen)
-    ip_list = cidr_merge(ip_set)
+    filtered_gen = filter_list_generator(input_gen, filters)
+    unique_gen = uniques(filtered_gen)
+    ip_list = cidr_merge(unique_gen)
     write_file(params['-O'], ip_list)
 
 if __name__ == "__main__":
