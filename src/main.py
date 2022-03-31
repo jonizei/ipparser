@@ -4,6 +4,7 @@ from netaddr import *
 from filters import *
 import time
 from iputils import *
+import multiprocessing as mp
 
 DIVIDER = '-'
 
@@ -29,6 +30,7 @@ def main(argv):
 
 
 if __name__ == "__main__":
+    mp.freeze_support()
     start_time = time.time()
     main(sys.argv)
     elapsed = time.time() - start_time
