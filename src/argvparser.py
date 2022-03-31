@@ -14,6 +14,9 @@ parameters = {
     },
     '-net' : {
         'pair' : False
+    },
+    '-mp' : {
+        'pair' : False
     }
 }
 
