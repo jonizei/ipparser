@@ -10,7 +10,9 @@
 ## Optional parameters
   
   -min \<number\> = minimun accepted network<br/>
-  -net = find network address for every ip address 
+  -net = find network address for every ip address<br/> 
+  -mp = process file using multiprocessing
+  -count = count addresses in the input file
   
 ## Possible inputs
 
