@@ -11,8 +11,8 @@
   
   -min \<number\> = minimun accepted network<br/>
   -net = find network address for every ip address<br/> 
-  -mp = process file using multiprocessing
-  -count = count addresses in the input file
+  -mp = process file using multiprocessing<br/>
+  -count = count addresses in the input file<br/>
   
 ## Possible inputs
 
