@@ -6,9 +6,6 @@ parameters = {
     '-O' : {
         'pair' : True
     },
-    '-all' : {
-        'pair' : False
-    },
     '-min' : {
         'pair' : True
     },
@@ -16,6 +13,9 @@ parameters = {
         'pair' : False
     },
     '-mp' : {
+        'pair' : False
+    },
+    '-count' : {
         'pair' : False
     }
 }

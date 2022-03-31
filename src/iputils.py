@@ -131,6 +131,14 @@ def paraller_filter(results, filters):
 
     return results
 
+# Counts items in a list using multiprocessing
+def paraller_count(results):
+    cpu_count = mp.cpu_count()
+    with mp.Pool(cpu_count) as p:
+        count_results = p.map(len, results)
+
+    return count_results
+
 # Filter ip list using given filters
 def filter_list_generator(ip_gen, filters):
     for item in ip_gen:
@@ -186,3 +194,9 @@ def process_file_multiprocessing(params):
     results = paraller_read(params['-I'])
     results = paraller_filter(results, filters)
     return cidr_merge(results)
+
+# Count items in a file using multiprocessing
+def count_items(filename):
+    results = paraller_read(filename)
+    results = paraller_count(results)
+    return sum(results)
