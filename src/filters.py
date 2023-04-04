@@ -7,32 +7,28 @@ DIVIDER = '-'
 def ip_and(ip):
     ip_bits = ip.ip.bits()
     mask_bits = ip.netmask.bits()
-    mask = ip.__str__().split('/')[1]
-    tmp = ''
+    mask = ip.prefixlen
     ip_array = []
+    
+    tmp_bits = ''
 
     for i in range(0, len(ip_bits)):
         if ip_bits[i] != '.':
             if ip_bits[i] == '1' and mask_bits[i] == '1':
-                tmp += '1'
+                tmp_bits += '1'
             else:
-                tmp += '0'
+                tmp_bits += '0'
         else:
-            ip_array.append(str(int(tmp, 2)))
-            tmp = ''
-
-        if i == len(ip_bits)-1:
-            i_bit = int(tmp, 2)
-            ip_array.append(str(i_bit))
-            tmp = ''
-
-    return IPNetwork('.'.join(ip_array) + '/' + mask)
+            ip_array.append(str(int(tmp_bits, 2)))
+            tmp_bits = ''
+    
+    return IPNetwork('.'.join(ip_array) + '/' + str(mask))
 
 # Return filter that is assigned to the given parameter
 def get_filter(params, key):
-    if key == '-min':
+    if key == 'MIN':
         return IPSupernetFilter(int(params[key]))
-    elif key == '-net':
+    elif key == 'NET':
         return IPNetworkFilter()
     else:
         return None

@@ -1,21 +1,31 @@
 
+PARAM_TOKEN = '-'
+
 parameters = {
-    '-I' : {
+    'INPUT' : {
+        'token' : '-I',
         'pair' : True
     },
-    '-O' : {
+    'OUTPUT' : {
+        'token' : '-O',
         'pair' : True
     },
-    '-min' : {
+    'MIN' : {
+        'token' : '-min',
         'pair' : True
+        , 'weight' : 2
     },
-    '-net' : {
+    'NET' : {
+        'token' : '-net',
+        'pair' : False
+        , 'weight' : 1
+    },
+    'MULTI_PROCESS' : {
+        'token' : '-mp',
         'pair' : False
     },
-    '-mp' : {
-        'pair' : False
-    },
-    '-count' : {
+    'COUNT' : {
+        'token' : '-count',
         'pair' : False
     }
 }
@@ -23,9 +33,22 @@ parameters = {
 # Finds all parameters from input
 def find_parameters(argv):
     params = []
-    for i in range(0, len(argv)):
-        if argv[i][0] == '-':
-            params.append((i, argv[i]))
+    arg_count = len(argv);
+    for i in range(0, arg_count):
+        if is_param(argv[i]):
+
+            param_value = ''
+            next_idx = i + 1
+
+            if next_idx < arg_count:
+                if not is_param(argv[next_idx]):
+                    param_value = argv[next_idx]
+
+            params.append({
+                'index' : i,
+                'token' : argv[i],
+                'value' : param_value
+            })
 
     return params
 
@@ -34,15 +57,34 @@ def parse(argv):
     parsed_params = {}
     found_params = find_parameters(argv)
 
-    for p in found_params:
-        if p[1] in parameters.keys():
-            if parameters[p[1]]['pair']:
-                if p[0] + 1 < len(argv):
-                    value = argv[p[0] + 1]
-                    if value[0] != '-':
-                        parsed_params[p[1]] = value
-            else:
-                parsed_params[p[1]] = ''
+    for param in found_params:
+        key = get_param_key(param['token'])
+
+        if not key == None:
+            parsed_params[key] = param['value']
 
     return parsed_params
 
+def get_param_key(token):
+
+    param_key = None
+
+    for key in parameters.keys():
+        if parameters[key]['token'] == token:
+            param_key = key
+            break
+
+    return param_key
+
+def required_params_exists(params):
+    if 'INPUT' in params and 'OUTPUT' in params:
+        return True
+    
+    return False
+
+def is_param(txt):
+    if len(txt) > 1:
+        if txt[0] == PARAM_TOKEN:
+            return True
+        
+    return False

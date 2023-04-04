@@ -181,7 +181,7 @@ def input_file_generator(filename):
 
 # Process given input file
 def process_file_serial(params):
-    input_gen = input_file_generator(params['-I'])
+    input_gen = input_file_generator(params['INPUT'])
     filters = create_filters(params)
     filtered_gen = filter_list_generator(input_gen, filters)
     unique_gen = uniques(filtered_gen)
@@ -191,7 +191,7 @@ def process_file_serial(params):
 # Process given input file using multiprocessing
 def process_file_multiprocessing(params):
     filters = create_filters(params)
-    results = paraller_read(params['-I'])
+    results = paraller_read(params['INPUT'])
     results = paraller_filter(results, filters)
     return cidr_merge(results)
 
