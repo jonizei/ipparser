@@ -4,3 +4,5 @@ test/
 tmp/
 *.txt
 *.spec
+src/tests
+src/__pycache__
