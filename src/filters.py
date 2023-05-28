@@ -1,4 +1,4 @@
-from ipfilter import IPFilter
+import ipfilter as ipfilter
 from netaddr import *
 
 DIVIDER = '-'
@@ -27,9 +27,9 @@ def ip_and(ip):
 # Return filter that is assigned to the given parameter
 def get_filter(params, key):
     if key == 'MIN':
-        return IPSupernetFilter(int(params[key]))
+        return IPSupernetFilter(ipfilter.ANY, int(params[key]))
     elif key == 'NET':
-        return IPNetworkFilter()
+        return IPNetworkFilter(ipfilter.LAST)
     else:
         return None
 
@@ -43,13 +43,14 @@ def get_ip_range(start, end):
 def range_input(part1, part2):
     if not '.' in part2 and len(part2) < 4:
         part2 = '.'.join(part1.split('.')[0:3]) + '.' + part2
-    
+
     return get_ip_range(part1, part2)
 
 # Filter for setting minimum netmask
-class IPSupernetFilter(IPFilter):
+class IPSupernetFilter(ipfilter.IPFilter):
 
-    def __init__(self, mask_size):
+    def __init__(self, type, mask_size):
+        super().__init__(type)
         self.mask_size = mask_size
 
     def filter(self, ip):
@@ -61,7 +62,7 @@ class IPSupernetFilter(IPFilter):
         return ip
 
 # Filter for setting every address to its network address
-class IPNetworkFilter(IPFilter):
+class IPNetworkFilter(ipfilter.IPFilter):
 
     def filter(self, ip):
         return ip_and(ip)

@@ -3,6 +3,7 @@ from netaddr import *
 from filters import *
 import multiprocessing as mp
 import os
+import ipfilter as ipfilter
 
 DIVIDER = '-'
 
@@ -20,12 +21,13 @@ def write_file(filename, data):
     with open(filename, "w") as file:
         file.write("\n".join(address.__str__() for address in data))
 
-def filter_list(ip_list, filters):
+def filter_list(ip_list, filters, type):
     new_list = []
     for ip in ip_list:
         tmp = ip
         for f in filters:
-            tmp = f.filter(ip)
+            if f.get_type() == type:
+                tmp = f.filter(ip)
         new_list.append(tmp) 
     
     return new_list
@@ -112,16 +114,16 @@ def paraller_read(filename):
     return results
 
 # Filter chunk of ip addresses
-def filter_chunk(chunk, filters):
-    ip_list = filter_list(chunk, filters)
+def filter_chunk(chunk, filters, type):
+    ip_list = filter_list(chunk, filters, type)
     unique_set = uniques(ip_list)
     return cidr_merge(unique_set)
 
 # Filter ip addresses with multiple processes
-def paraller_filter(results, filters):
+def paraller_filter(results, filters, type):
     cpu_count = mp.cpu_count()
     filter_results = []
-    results = [(x, filters) for x in results]
+    results = [(x, filters, type) for x in results]
     with mp.Pool(cpu_count) as p:
         filter_results = p.starmap(filter_chunk, results)
     
@@ -140,12 +142,13 @@ def paraller_count(results):
     return count_results
 
 # Filter ip list using given filters
-def filter_list_generator(ip_gen, filters):
+def filter_list_generator(ip_gen, filters, type):
     for item in ip_gen:
         for ip in item:
             tmp = ip
             for f in filters:
-                tmp = f.filter(tmp)
+                if f.get_type() == type:
+                    tmp = f.filter(tmp)
             yield tmp
         
 # Parse unique ip networks
@@ -159,16 +162,7 @@ def uniques_generator(ip_gen):
 # Check if given line is either single ip address
 # or a ip range. If line is ip range then extract the range
 def process_line_generator(line):
-    ip_list = []
-    if line != '':
-        line = line.replace(' ', '')
-        tokens = line.split(DIVIDER)
-        if len(tokens) < 2:
-            ip_list.append(IPNetwork(tokens[0]))
-        else:
-            tmp = range_input(tokens[0], tokens[1])
-            ip_list.extend(tmp)
-    
+    ip_list = process_line(line)
     return (x for x in ip_list)
 
 # Read text file
@@ -183,17 +177,22 @@ def input_file_generator(filename):
 def process_file_serial(params):
     input_gen = input_file_generator(params['INPUT'])
     filters = create_filters(params)
-    filtered_gen = filter_list_generator(input_gen, filters)
+    filtered_gen = filter_list_generator(input_gen, filters, ipfilter.ANY)
     unique_gen = uniques(filtered_gen)
     ip_list = cidr_merge(unique_gen)
+    last_filtered = filter_list(ip_list, filters, ipfilter.LAST)
+    ip_list = cidr_merge(last_filtered)
     return ip_list
 
 # Process given input file using multiprocessing
 def process_file_multiprocessing(params):
     filters = create_filters(params)
     results = paraller_read(params['INPUT'])
-    results = paraller_filter(results, filters)
-    return cidr_merge(results)
+    results = paraller_filter(results, filters, ipfilter.ANY)
+    results = cidr_merge(results)
+    ip_list = filter_list(results, filters, ipfilter.LAST)
+    ip_list = cidr_merge(ip_list)
+    return ip_list
 
 # Count items in a file using multiprocessing
 def count_items(filename):
