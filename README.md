@@ -1,25 +1,37 @@
 # ipparser
 
-  Merges list of ip addresses into networks.
+ipparser is a command-line tool for processing and optimizing lists of IP addresses.  
+It combines addresses that belong to the same network, producing a minimal and efficient list of network ranges.
 
-## How to run
+## Features
 
-  1. Download newest release
-  2. Type "ipparser -I \<input text file\> -O \<output text file\> \<optional parameters\>" to a command prompt
+- Merges individual IP addresses into network ranges  
+- Supports various input formats (single IPs, CIDR blocks, and ranges)  
+- Offers multiprocessing for faster processing on large files  
+- Can count the total number of IP addresses in the input file  
 
-## Optional parameters
-  
-  -min \<number\> = minimun accepted network<br/>
-  -net = find network address for every ip address<br/> 
-  -mp = process file using multiprocessing (version >= v0.4.0)<br/>
-  -count = count addresses in the input file (version >= v0.4.0)<br/>
-  
-## Possible inputs
+## How to Run
 
-  input file can contain these lines:<br/>
-    - \<ip address\><br/>
-    - \<ip address\>/\<subnet mask\><br/>
-    - \<ip address\> - \<ip address\><br/>
-    - \<ip address\>/\<subnet mask\> - \<ip address\>/\<subnet mask\><br/>
-    - \<ip address\> - \<host net\><br/>
-    
+1. Download the latest release  
+2. Run the following command in a terminal:
+
+   ```
+   ipparser -I <input file> -O <output file> [optional parameters]
+   ```
+
+## Optional Parameters
+
+- `-min <number>` — Minimum accepted network size  
+- `-net` — Calculate the network address for every IP  
+- `-mp` — Enable multiprocessing (available since v0.4.0)  
+- `-count` — Count all IP addresses in the input file (available since v0.4.0)  
+
+## Accepted Input Formats
+
+The input file can contain any of the following formats:
+
+- `<ip address>`  
+- `<ip address>/<subnet mask>`  
+- `<ip address> - <ip address>`  
+- `<ip address>/<subnet mask> - <ip address>/<subnet mask>`  
+- `<ip address> - <host net>`  
